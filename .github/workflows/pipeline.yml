@@ -1,43 +1,53 @@
-name: Build and Release Electron App
+name: Build Electron App for Mac and Windows
 
 on:
   push:
     branches:
       - main
-    tags:
-      - 'v*.*.*'  # Trigger release when a tag is pushed (e.g., v1.0.0)
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  release:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest]
-
+  build-mac:
+    name: Build for macOS
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
-
+          node-version: '16'
       - name: Install dependencies
-        run: npm install  # Use npm install instead of npm ci
-
-      - name: Run build script (optional)
-        run: npm run build  # Only if you need a custom build step
-
-      - name: Build and release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for releases
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}  # Trigger release only for tagged commits (e.g., v1.0.0)
-
-      - name: Upload Artifacts (Non-Main Branches Only)
-        if: success() && github.ref != 'refs/heads/main'  # Upload artifacts only for non-main branches
+        run: npm install
+      - name: Build for macOS
+        run: npm run dist
+      - name: Upload macOS Artifacts
+        if: success()
         uses: actions/upload-artifact@v3
         with:
-          name: electron-app
-          path: dist/*  # Upload all files in the dist folder
+          name: mac-build
+          path: dist/*.dmg
+
+  build-win:
+    name: Build for Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
+      - name: Build for Windows
+        run: npm run dist
+
+      - name: Upload Windows Artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: win-build
+          path: dist/*.exe
