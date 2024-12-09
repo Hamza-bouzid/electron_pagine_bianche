@@ -1,53 +1,44 @@
-name: Build Electron App for Mac and Windows
+name: Build and Release Electron App
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'  # Trigger release when a tag is pushed (e.g., v1.0.0)
 
 jobs:
-  build-mac:
-    name: Build for macOS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
-      - name: Build for macOS
-        run: npm run dist
-      - name: Upload macOS Artifacts
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: mac-build
-          path: dist/*.dmg  # Ensure this path matches the output of your build
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
-  build-win:
-    name: Build for Windows
-    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+
       - name: Install dependencies
         run: npm install
-      - name: Build for Windows
-        run: npm run dist
-      - name: Upload Windows Artifacts
-        if: success()
+
+      - name: Run build script (optional)
+        run: npm run build  # If you have a custom build step before running electron-builder
+
+      - name: Build and release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to release on GitHub
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}  # Release only for tagged commits
+
+      - name: Upload Artifacts
+        if: success() && github.ref != 'refs/heads/main'  # Don't upload artifacts for the main branch
         uses: actions/upload-artifact@v3
         with:
-          name: win-build
-          path: dist/*.exe  # Ensure this path matches the output of your build
+          name: electron-app
+          path: dist/*  # Upload all files in the dist folder
 
