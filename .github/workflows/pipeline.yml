@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, windows-latest]
 
     steps:
       - name: Checkout repository
@@ -23,20 +23,20 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies using npm ci
+        run: npm ci  # Ensures a clean, reproducible install based on package-lock.json
 
       - name: Run build script (optional)
-        run: npm run build  # If you have a custom build step before running electron-builder
+        run: npm run build  # Only if you need a custom build step
 
       - name: Build and release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to release on GitHub
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}  # Release only for tagged commits
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for releases
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}  # Trigger release only for tagged commits (e.g., v1.0.0)
 
-      - name: Upload Artifacts
-        if: success() && github.ref != 'refs/heads/main'  # Don't upload artifacts for the main branch
+      - name: Upload Artifacts (Non-Main Branches Only)
+        if: success() && github.ref != 'refs/heads/main'  # Upload artifacts only for non-main branches
         uses: actions/upload-artifact@v3
         with:
           name: electron-app
