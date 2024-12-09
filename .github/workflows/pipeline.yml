@@ -23,14 +23,12 @@ jobs:
         run: npm install
       - name: Build for macOS
         run: npm run dist
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Pass the token as an environment variable
       - name: Upload macOS Artifacts
         if: success()
         uses: actions/upload-artifact@v3
         with:
           name: mac-build
-          path: dist/*.dmg
+          path: dist/*.dmg  # Ensure this path matches the output of your build
 
   build-win:
     name: Build for Windows
@@ -41,6 +39,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version
-
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Build for Windows
+        run: npm run dist
+      - name: Upload Windows Artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: win-build
+          path: dist/*.exe  # Ensure this path matches the output of your build
 
