@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: mac-build
-          path: dist/*.dmg  # Adjust the path based on your build output (e.g., .dmg, .zip)
+          path: dist/*.dmg  # Ensure this path matches the output of your build
 
   build-win:
     name: Build for Windows
@@ -49,4 +49,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: win-build
-          path: dist/*.exe  # Adjust the path based on your build output (e.g., .exe, .zip)
+          path: dist/*.exe  # Ensure this path matches the output of your build
+
