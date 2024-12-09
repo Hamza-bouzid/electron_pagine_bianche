@@ -35,18 +35,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: mac-build
-          path: dist/*.dmg
+          path: dist/*
 
       - name: Upload Windows Artifacts
         if: success() && matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
           name: win-build
-          path: dist/*.exe
+          path: dist/*
 
-      - name: Upload Linux Artifacts
-        if: success() && matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v3
-        with:
-          name: linux-build
-          path: dist/*.AppImage
