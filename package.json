@@ -1,0 +1,74 @@
+{
+  "name": "electron_pagine_bianche",
+  "version": "1.0.0",
+  "description": "A scraping tool for Pagine Bianche with Electron and Playwright",
+  "author": "Hamza Bouzid",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "private": true,
+  "dependencies": {
+    "csv-writer": "^1.6.0",
+    "playwright": "^1.49.0",
+    "playwright-core": "^1.49.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "playwright": "^1.49.0",
+    "playwright-core": "^1.49.0"
+  },
+  "build": {
+    "appId": "com.example.electron-pagine-bianche",
+    "productName": "Pagine Bianche Scraper",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "src/assets/bot.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "src/assets/bot.ico",
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "files": [
+      "**/*",
+      "!**/node_modules/**/*",
+      "node_modules/csv-writer/**/*",
+      "node_modules/playwright/**/*",
+      "node_modules/playwright-core/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/csv-writer",
+        "to": "node_modules/csv-writer",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "node_modules/playwright",
+        "to": "node_modules/playwright",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "node_modules/playwright-core",
+        "to": "node_modules/playwright-core",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  }
+}
