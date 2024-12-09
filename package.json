@@ -25,6 +25,7 @@
   "build": {
     "appId": "com.example.electron-pagine-bianche",
     "productName": "Pagine Bianche Scraper",
+    "publish": "never",
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "src/assets/bot.icns",
@@ -70,6 +71,5 @@
         ]
       }
     ]
-  },
-  "publish": "never"
+  }
 }
