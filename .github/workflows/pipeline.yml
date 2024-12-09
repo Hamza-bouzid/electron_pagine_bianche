@@ -35,12 +35,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: mac-build
-          path: dist/*.mac.zip
+          path: dist/mac-arm64-unpacked
 
       - name: Upload Windows Artifacts
         if: success() && matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
           name: win-build
-          path: dist/*.win.zip
+          path: dist/win-arm64-unpacked
 
