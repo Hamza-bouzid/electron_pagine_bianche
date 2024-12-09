@@ -23,8 +23,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies using npm ci
-        run: npm ci  # Ensures a clean, reproducible install based on package-lock.json
+      - name: Install dependencies
+        run: npm install  # Use npm install instead of npm ci
 
       - name: Run build script (optional)
         run: npm run build  # Only if you need a custom build step
@@ -41,4 +41,3 @@ jobs:
         with:
           name: electron-app
           path: dist/*  # Upload all files in the dist folder
-
