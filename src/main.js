@@ -81,7 +81,7 @@ async function scrapeData(query, location) {
 
             // Send log for each contact found
             if (win) {
-                win.webContents.send('scraping-progress', `📇 Found contact: ${name}`);
+                win.webContents.send('scraping-progress', `Contatto trovato: ${name}`);
             }
         } catch (e) {
             console.error(`Error processing result ${i}:`, e);
