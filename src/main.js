@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const playwright = require('playwright');
+const playwright = require('playwright-core');
 const fs = require('fs');
 const { createObjectCsvWriter } = require('csv-writer');
 const os = require('os');
