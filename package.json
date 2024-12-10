@@ -43,8 +43,8 @@
     "files": [
       "dist/**/*",
       "src/**/*",
+      "node_modules/**/*",
       "package.json"
-    ],
-    "asar": true
+    ]
   }
 }

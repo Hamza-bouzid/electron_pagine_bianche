@@ -26,7 +26,7 @@ startButton.addEventListener('click', async () => {
     startButton.textContent = 'Scraping in corso...';
     loading.classList.remove('hidden');
 
-    updateProgress('🚀 Iniziando il processo di scraping...');
+    updateProgress('🚀 Scraping in corso...');
 
     const { success, filePath, error } = await ipcRenderer.invoke('start-scraping', query, location);
 
