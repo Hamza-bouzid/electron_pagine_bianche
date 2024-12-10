@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const { createObjectCsvWriter } = require('csv-writer');
 const os = require('os');
+const { exec } = require('child_process');  // For running shell commands
 
 let win;
 
@@ -20,6 +21,22 @@ function createWindow() {
     });
 
     win.loadFile('src/index.html'); // Load the HTML for the UI
+}
+
+// Function to download and install the browser every time
+async function installBrowser() {
+    return new Promise((resolve, reject) => {
+        // Run the Puppeteer command to install the browser
+        exec('npx puppeteer browsers install chrome', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error installing Puppeteer browser: ${error}`);
+                reject(error);
+                return;
+            }
+            console.log(`Browser installed: ${stdout}`);
+            resolve();
+        });
+    });
 }
 
 // Function to reject cookies if the button is visible
@@ -53,9 +70,10 @@ async function loadMoreResults(page) {
 // Scrape data with Puppeteer
 async function scrapeData(query, location) {
     const results = [];
+    await installBrowser();  // Ensure browser is installed every time
     const browser = await puppeteer.launch({
         headless: true,
-        executablePath: puppeteer.executablePath(),
+        executablePath: puppeteer.executablePath(), // Use the installed browser path
     });
     const page = await browser.newPage();
     await page.goto(`https://www.paginebianche.it/ricerca?qs=${query}&dv=${location}`);
