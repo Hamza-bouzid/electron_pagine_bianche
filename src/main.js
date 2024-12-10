@@ -61,7 +61,7 @@ async function loadMoreResults(page) {
 // Scrape data with Playwright
 async function scrapeData(query, location) {
     const results = [];
-    const browser = await playwright.chromium.launch({ headless: false });
+    const browser = await playwright.chromium.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(`https://www.paginebianche.it/ricerca?qs=${query}&dv=${location}`);
 
@@ -152,7 +152,7 @@ ipcMain.handle('start-scraping', async (_, query, location) => {
     try {
         // Notify the renderer that scraping has started
         if (win) {
-            win.webContents.send('scraping-progress', '🚀 Iniziando il processo di scraping...');
+            win.webContents.send('scraping-progress', '🚀 Processo di scraping in corso...');
         }
 
         const data = await scrapeData(query, location);

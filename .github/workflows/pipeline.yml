@@ -19,6 +19,12 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install
+
       - name: Log files in project root
         run: ls -R   # Recursively list all files in the project root directory
 
