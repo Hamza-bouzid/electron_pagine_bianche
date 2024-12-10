@@ -37,7 +37,7 @@ async function rejectCookies(page) {
 // Scrape data with Playwright
 async function scrapeData(query, location) {
     const results = [];
-    const browser = await playwright.chromium.launch({ headless: false });
+    const browser = await playwright.chromium.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(`https://www.paginebianche.it/ricerca?qs=${query}&dv=${location}`);
 

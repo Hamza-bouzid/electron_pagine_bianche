@@ -41,34 +41,10 @@
       ]
     },
     "files": [
-      "**/*",
-      "!**/node_modules/**/*",
-      "node_modules/csv-writer/**/*",
-      "node_modules/playwright/**/*",
-      "node_modules/playwright-core/**/*"
-    ],
-    "extraResources": [
-      {
-        "from": "node_modules/csv-writer",
-        "to": "node_modules/csv-writer",
-        "filter": [
-          "**/*"
-        ]
-      },
-      {
-        "from": "node_modules/playwright",
-        "to": "node_modules/playwright",
-        "filter": [
-          "**/*"
-        ]
-      },
-      {
-        "from": "node_modules/playwright-core",
-        "to": "node_modules/playwright-core",
-        "filter": [
-          "**/*"
-        ]
-      }
+        "dist/**/*",
+        "node_modules/**/*",
+        "src/**/*",
+        "package.json"
     ]
   }
 }
