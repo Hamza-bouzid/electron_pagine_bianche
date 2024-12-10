@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const playwright = require('playwright-core');
+const puppeteer = require('puppeteer');
 const fs = require('fs');
 const { createObjectCsvWriter } = require('csv-writer');
 const os = require('os');
@@ -23,59 +23,52 @@ function createWindow() {
 }
 
 // Function to reject cookies if the button is visible
-// Function to reject cookies if the button is visible
 async function rejectCookies(page) {
     try {
-        // Wait for the reject button to be visible and clickable
-        const rejectButton = await page.locator('.ubl-cst__btn--reject');
-
-        // Wait for the button to be visible and ready for interaction
-        await rejectButton.waitFor({ state: 'visible', timeout: 5000 });
-
-        // Check if the button is interactable and then click it
-        if (await rejectButton.isVisible() && await rejectButton.isEnabled()) {
+        const rejectButton = await page.$('.ubl-cst__btn--reject');
+        if (rejectButton) {
             await rejectButton.click();
             if (win) {
                 win.webContents.send('scraping-progress', '🍪 Cookies rejected');
             }
-        } else {
-            console.log('Reject button is not clickable.');
         }
     } catch (e) {
         console.error('Error rejecting cookies:', e);
     }
 }
 
-
+// Function to load more results
 async function loadMoreResults(page) {
     try {
-        const loadMoreButton = await page.locator('.click-load-others');
-        if (await loadMoreButton.isVisible()) {
+        const loadMoreButton = await page.$('.click-load-others');
+        if (loadMoreButton) {
             await loadMoreButton.click();
+            await page.waitForTimeout(2000); // Allow time for results to load
         }
     } catch (e) {
         console.log(`Error loading more results: ${e}`);
     }
 }
 
-// Scrape data with Playwright
+// Scrape data with Puppeteer
 async function scrapeData(query, location) {
     const results = [];
-    const browser = await playwright.chromium.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(`https://www.paginebianche.it/ricerca?qs=${query}&dv=${location}`);
 
     // Reject cookies
     await rejectCookies(page);
 
+    // Load more results if available
     await loadMoreResults(page);
 
-    const cards = await page.locator('.list-element--free');
-    for (let i = 0; i < await cards.count(); i++) {
+    const cards = await page.$$('.list-element--free');
+    for (const card of cards) {
         try {
-            const name = await cards.nth(i).locator('.list-element__title').textContent();
-            const address = await cards.nth(i).locator('.list-element__address').textContent();
-            const phone = await extractPhoneNumber(cards.nth(i));
+            const name = await card.$eval('.list-element__title', el => el.textContent.trim());
+            const address = await card.$eval('.list-element__address', el => el.textContent.trim());
+            const phone = await extractPhoneNumber(card);
 
             results.push({ Nome: name, Telefono: phone, Indirizzo: address });
 
@@ -84,7 +77,7 @@ async function scrapeData(query, location) {
                 win.webContents.send('scraping-progress', `Contatto trovato: ${name}`);
             }
         } catch (e) {
-            console.error(`Error processing result ${i}:`, e);
+            console.error('Error processing card:', e);
         }
     }
 
@@ -95,32 +88,21 @@ async function scrapeData(query, location) {
 // Extract phone number from a card
 async function extractPhoneNumber(card) {
     let phone = 'Non disponibile';
-
     try {
-        // Locate the phone number button and wait for it to be visible
-        const phoneButton = await card.locator('.phone-numbers__cloak.btn');
-
-        // Wait for the phone button to be visible before clicking
-        await phoneButton.waitFor({ state: 'visible', timeout: 5000 });
-
-        // Click the phone button to reveal the phone number
-        await phoneButton.click();
-
-        // Locate the phone number element
-        const phoneLocator = await card.locator('.tel');
-
-        // Check if there are any phone numbers found and select the first one
-        const phoneText = await phoneLocator.first().textContent();
-
-        // If the phone number exists, assign it; otherwise, return "Non disponibile"
-        phone = phoneText ? phoneText.trim() : 'N/A';
+        const phoneButton = await card.$('.phone-numbers__cloak.btn');
+        if (phoneButton) {
+            await phoneButton.click();
+            const phoneElement = await card.$('.tel');
+            if (phoneElement) {
+                phone = await phoneElement.evaluate(el => el.textContent.trim());
+            }
+        }
     } catch (e) {
-        // If any error occurs, return 'Non disponibile'
         console.log(`Error extracting phone number: ${e}`);
     }
-
     return phone;
 }
+
 // Save results to CSV
 function saveToCSV(data, fileName) {
     const desktopDir = os.platform() === 'win32'
@@ -150,7 +132,6 @@ function saveToCSV(data, fileName) {
 // Handle scraping and file saving via IPC
 ipcMain.handle('start-scraping', async (_, query, location) => {
     try {
-        // Notify the renderer that scraping has started
         if (win) {
             win.webContents.send('scraping-progress', '🚀 Processo di scraping in corso...');
         }
@@ -164,7 +145,6 @@ ipcMain.handle('start-scraping', async (_, query, location) => {
         const fileName = `${query}_${location}_${new Date().toISOString().replace(/[^\w\s]/gi, '')}`;
         const filePath = saveToCSV(data, fileName);
 
-        // Notify progress that CSV is generated
         if (win) {
             win.webContents.send('scraping-progress', `📝 CSV generato: ${filePath}`);
         }
