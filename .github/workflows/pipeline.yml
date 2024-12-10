@@ -20,17 +20,11 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        env:
-          PUPPETEER_SKIP_DOWNLOAD: false
-          PUPPETEER_CACHE_DIR: ./puppeteer-cache
         run: npm install
-
-      - name: Install Puppeteer Browsers
-        run: npx puppeteer browsers install chrome
 
       - name: Build for Distribution
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provide GitHub Token for Electron Builder
         run: npm run dist
 
       - name: Upload macOS Artifacts
