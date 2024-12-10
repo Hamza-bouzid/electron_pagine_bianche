@@ -53,7 +53,10 @@ async function loadMoreResults(page) {
 // Scrape data with Puppeteer
 async function scrapeData(query, location) {
     const results = [];
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+        headless: true,
+        executablePath: puppeteer.executablePath(),
+    });
     const page = await browser.newPage();
     await page.goto(`https://www.paginebianche.it/ricerca?qs=${query}&dv=${location}`);
 
