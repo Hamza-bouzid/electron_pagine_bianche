@@ -41,10 +41,11 @@
       ]
     },
     "files": [
-        "dist/**/*",
-        "node_modules/**/*",
-        "src/**/*",
-        "package.json"
-    ]
+      "dist/**/*",
+      "node_modules/**/*",
+      "src/**/*",
+      "package.json"
+    ],
+    "asar": true
   }
 }

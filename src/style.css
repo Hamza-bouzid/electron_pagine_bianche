@@ -1,43 +1,163 @@
+/* Global styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f4f4f4;
+    background-color: #36393f; /* Dark background color */
+    overflow: hidden;
 }
 
+/* Container styling */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: #2f3136; /* Dark gray background */
+    padding: 20px; /* Reduced padding */
+    border-radius: 10px; /* Slightly smaller border radius */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Slightly smaller shadow */
+    width: 100%;
+    max-width: 400px; /* Reduced max-width for a smaller container */
+    text-align: center;
+    color: #fff; /* Light text color for contrast */
 }
 
+
+/* Input styling */
 input {
-    margin: 10px;
+    width: 90%;
     padding: 8px;
-    font-size: 16px;
-    width: 200px;
+    margin: 10px 0; /* Reduced margin */
+    border: 1px solid #7289da; /* Light blue border */
+    border-radius: 8px;
+    font-size: 30px; /* Slightly smaller font size */
+    background-color: #40444b; /* Darker input background */
+    color: #fff; /* White text inside input */
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
+/* Input focus effect */
+input:focus {
+    border-color: #4f9cf2; /* Bright blue when focused */
+}
+
+/* Button styling */
 button {
-    padding: 10px 20px;
-    font-size: 16px;
+    width: 50%;
+    padding: 10px; /* Reduced padding */
+    font-size: 30px; /* Slightly smaller font size */
+    color: #fff;
+    background-color: #7289da; /* Discord blue */
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
 }
 
+/* Button hover effect */
+button:hover {
+    background-color: #5e73b7; /* Slightly darker blue on hover */
+}
+
+/* Disabled button */
 button:disabled {
+    background-color: #444950; /* Darker background for disabled button */
     cursor: not-allowed;
 }
 
-#message {
+/* Hidden class for elements */
+.hidden {
+    display: none;
+}
+
+/* Loading spinner and progress message */
+#loading {
     margin-top: 20px;
-    font-size: 16px;
-    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#loading .spinner {
+    border: 4px solid #ccc;
+    border-top: 4px solid #7289da; /* Discord blue spinner */
+    border-radius: 50%;
+    width: 32px; /* Smaller spinner size */
+    height: 32px; /* Smaller spinner size */
+    animation: spin 1s linear infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Progress message styling */
+#progress-message {
+    font-size: 12px; /* Smaller font size */
+    color: #b9bbbe; /* Light gray text color for progress messages */
+}
+
+/* Results container */
+#results {
+    margin-top: 15px; /* Reduced margin */
+    text-align: left;
+    max-height: 180px; /* Reduced max-height */
+    overflow-y: auto;
+}
+
+/* Result card styling */
+.result-card {
+    background-color: #40444b; /* Darker card background */
+    padding: 12px; /* Reduced padding */
+    border-radius: 8px;
+    margin-bottom: 10px; /* Reduced margin */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.result-card h3 {
+    margin: 0 0 6px 0; /* Reduced margin */
+    font-size: 16px; /* Smaller font size */
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.result-card p {
+    color: #b9bbbe; /* Lighter text color for details */
+    font-size: 12px; /* Smaller font size */
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px; /* Reduced padding for small screens */
+    }
+
+    h1 {
+        font-size: 24px; /* Even smaller heading font size */
+    }
+
+    input {
+        font-size: 12px; /* Smaller font size for input fields */
+    }
+
+    button {
+        font-size: 12px; /* Smaller font size for buttons */
+    }
+
+    #loading .spinner {
+        width: 24px; /* Smaller spinner for small screens */
+        height: 24px; /* Smaller spinner for small screens */
+    }
+
+    .result-card h3 {
+        font-size: 14px; /* Smaller font size for result card titles */
+    }
 }

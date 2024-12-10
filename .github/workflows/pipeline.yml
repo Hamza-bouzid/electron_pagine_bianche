@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: mac-build
-          path: dist/mac-arm64/*
+          path: dist/*
 
       - name: Upload Windows Artifacts
         if: success() && matrix.os == 'windows-latest'
