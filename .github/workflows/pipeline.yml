@@ -42,11 +42,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: mac-build
-          path: dist/*
+          path: |
+            dist/*.dmg
+            dist/*.zip
 
       - name: Upload Windows Artifacts
         if: success() && matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
           name: win-build
-          path: dist/*
+          path: dist/*.exe
